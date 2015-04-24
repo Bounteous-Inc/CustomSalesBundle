@@ -1,0 +1,4 @@
+custom_leads_bundle:
+    resource:     "../../vendor/oro/crm/src/OroCRM/Bundle/SalesBundle/Controller"
+    type:         annotation
+

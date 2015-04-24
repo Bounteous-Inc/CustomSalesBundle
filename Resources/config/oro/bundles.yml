@@ -1,0 +1,2 @@
+bundles:
+    - { name: DemacMedia\Bundle\CustomSalesBundle\DemacMediaCustomSalesBundle, priority: 101 }
