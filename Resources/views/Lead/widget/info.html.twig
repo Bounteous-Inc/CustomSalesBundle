@@ -39,11 +39,13 @@
             {{ ui.renderHtmlProperty('orocrm.sales.lead.email.label'|trans, entity.email ? email.email_address_simple(entity.email) : null) }}
             {{ ui.renderHtmlProperty('orocrm.sales.lead.phone_number.label'|trans, entity.phoneNumber ? ui.renderPhone(entity.phoneNumber) : null) }}
             {{ ui.renderHtmlProperty('orocrm.sales.lead.website.label'|trans, entity.website ? ui.renderUrl(entity.website, entity.website, 'no-hash') : null) }}
-            {{ ui.renderHtmlProperty('orocrm.sales.lead.notes.label'|trans, entity.notes|replace({"\n":'<hr />', "\r":' '})) }}
-
-            <script>
+            {{ ui.renderHtmlProperty('orocrm.sales.lead.notes.label'|trans, entity.notes) }}
+        </div>
+        
+        <div id="download_file"></div>
+             <script>
                 var re = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)/ig;
-                var str = '{{ entity.notes|replace({"\n":' ', "\r":' '}) }}';
+                var str = '{{ entity.notes|replace({"\n":'', "\r":''}) }}';
                 var m;
 
                 if ((m = re.exec(str)) !== null) {
@@ -51,10 +53,9 @@
                         re.lastIndex++;
                     }
                     if (m[0].length > 0) {
-                      document.write("<hr /><strong>Attached File:</strong> <a href='" + m[0] + "' class='btn icons-holder-text no-hash'>Download</a>");
+                       document.getElementById("download_file").innerHTML = "<hr><strong>Attached File: </strong> <a href='" + m[0] + "' class='btn icons-holder-text no-hash' target='_blank'>Download</a>";
                     }
                 }
             </script>
-        </div>
     </div>
 </div>
