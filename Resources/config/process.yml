@@ -1,0 +1,29 @@
+definitions:
+    lead_creation:
+        label:   'Create Sales Process for Lead'
+        enabled: true
+        entity:  OroCRM\Bundle\SalesBundle\Entity\Lead
+        order:   10
+        actions_configuration:
+            - @create_entity:
+                class:     OroCRM\Bundle\SalesBundle\Entity\SalesFunnel
+                attribute: $.salesFunnel
+                data:
+                    startDate:    $createdAt
+                    owner:        $owner
+                    lead:         $.data
+                    organization: $organization
+                    dataChannel:  $dataChannel
+                flush: true
+            - @start_workflow:
+                name: b2b_flow_sales_funnel
+                entity: $.salesFunnel
+                attribute: $.workflowItem
+                transition: start_from_lead
+
+triggers:
+    lead_creation:
+        -
+            event:    create
+            priority: 5
+            queued:   false
