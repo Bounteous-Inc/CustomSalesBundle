@@ -1,0 +1,157 @@
+datagrid:
+    sales-funnel-grid-custom:
+        extended_entity_name: %orocrm_sales.salesfunnel.entity.class%
+        options:
+            entityHint: sales process
+            entity_pagination: true
+        source:
+            type: orm
+            acl_resource: orocrm_sales_salesfunnel_view
+            query:
+                select:
+                    - salesFunnel.id
+                    - salesFunnel.startDate
+                    - lead.name as leadName
+                    - lead.email as leadEmail
+                    - opportunity.name as opportunityName
+                    - opportunity.budgetAmount as opportunityBudget
+                    - opportunity.closeRevenue as opportunityRevenue
+                    - opportunity.probability as opportunityProbability
+                    - step.label as stepLabel
+                    - channel.name as channelName
+                    - CONCAT(owner.firstName, CONCAT(' ', owner.lastName)) as ownerName
+                from:
+                    - { table: %orocrm_sales.salesfunnel.entity.class%, alias: salesFunnel }
+                join:
+                    left:
+                        - { join: salesFunnel.workflowStep, alias: step }
+                        - { join: salesFunnel.lead, alias: lead }
+                        - { join: salesFunnel.opportunity, alias: opportunity }
+                        - { join: salesFunnel.dataChannel, alias: channel }
+                        - { join: salesFunnel.owner, alias: owner }
+        columns:
+            id:
+                label: orocrm.sales.salesfunnel.id.label
+            channelName:
+                label: orocrm.sales.salesfunnel.data_channel.label
+            startDate:
+                label: orocrm.sales.salesfunnel.start_date.label
+                frontend_type: date
+            leadName:
+                label: orocrm.sales.salesfunnel.lead.label
+            leadEmail:
+                label: 'Lead Email'
+            opportunityName:
+                label: orocrm.sales.salesfunnel.opportunity.label
+            opportunityBudget:
+                label: orocrm.sales.opportunity.budget_amount.label
+                frontend_type: currency
+            opportunityRevenue:
+                label: orocrm.sales.opportunity.close_revenue.label
+                frontend_type: currency
+            opportunityProbability:
+                label: orocrm.sales.opportunity.probability.label
+                frontend_type: percent
+            stepLabel:
+                label: orocrm.sales.salesfunnel.workflow_step.label
+            ownerName:
+                label: orocrm.sales.salesfunnel.owner.label
+        properties:
+            view_link:
+                type:       url
+                route:      orocrm_sales_salesfunnel_view
+                params:     [ id ]
+            update_link:
+                type:       url
+                route:      orocrm_sales_salesfunnel_update
+                params:     [ id ]
+            delete_link:
+                type:       url
+                route:      oro_api_delete_salesfunnel
+                params:     [ id ]
+        sorters:
+            columns:
+                id:
+                    data_name: salesFunnel.id
+                channelName:
+                    data_name: channelName
+                startDate:
+                    data_name: salesFunnel.startDate
+                leadName:
+                    data_name: lead.name
+                opportunityName:
+                    data_name: opportunity.name
+                opportunityBudget:
+                    data_name: opportunity.budgetAmount
+                opportunityRevenue:
+                    data_name: opportunity.closeRevenue
+                opportunityProbability:
+                    data_name: opportunity.probability
+                stepLabel:
+                    data_name: step.label
+                ownerName:
+                    data_name: ownerName
+            default:
+                startDate: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC
+        actions:
+            view:
+                type:          navigate
+                acl_resource:  orocrm_sales_salesfunnel_view
+                label:         oro.grid.action.view
+                icon:          eye-open
+                link:          view_link
+                rowAction:     true
+            update:
+                type:          navigate
+                acl_resource:  orocrm_sales_salesfunnel_update
+                label:         oro.grid.action.update
+                icon:          edit
+                link:          update_link
+            delete:
+                type:          delete
+                acl_resource:  orocrm_sales_salesfunnel_delete
+                label:         oro.grid.action.delete
+                icon:          trash
+                link:          delete_link
+        filters:
+            columns:
+                id:
+                    type: number
+                    data_name: salesFunnel.id
+                channelName:
+                    type:      entity
+                    data_name: channel.id
+                    options:
+                        field_options:
+                            class: OroCRMChannelBundle:Channel
+                            property: name
+                            translatable_options: false
+                startDate:
+                    type:      date
+                    data_name: salesFunnel.startDate
+                leadName:
+                    type: string
+                    data_name: lead.name
+                opportunityName:
+                    type: string
+                    data_name: opportunity.name
+                opportunityBudget:
+                    type: currency
+                    data_name: opportunity.budgetAmount
+                opportunityRevenue:
+                    type: currency
+                    data_name: opportunity.closeRevenue
+                opportunityProbability:
+                    type: percent
+                    data_name: opportunity.probability
+                stepLabel:
+                    type: entity
+                    data_name: salesFunnel.workflowStep
+                    options:
+                        field_type: oro_workflow_step_select
+                        field_options:
+                            workflow_entity_class: %orocrm_sales.salesfunnel.entity.class%
+                            translatable_options: false
+                ownerName:
+                    type:      string
+                    data_name: ownerName
