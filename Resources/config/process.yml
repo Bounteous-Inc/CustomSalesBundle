@@ -1,6 +1,6 @@
 definitions:
     lead_creation:
-        label:   'Create Sales Process for Lead'
+        label:   'Create Sales Process for Lead (Custom)'
         enabled: true
         entity:  OroCRM\Bundle\SalesBundle\Entity\Lead
         order:   10
@@ -16,7 +16,7 @@ definitions:
                     dataChannel:  $dataChannel
                 flush: true
             - @start_workflow:
-                name: b2b_flow_sales_funnel
+                name: b2b_flow_sales_funnel_clone_560ab3ad43308
                 entity: $.salesFunnel
                 attribute: $.workflowItem
                 transition: start_from_lead
