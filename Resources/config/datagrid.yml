@@ -155,3 +155,82 @@ datagrid:
                 ownerName:
                     type:      string
                     data_name: ownerName
+
+
+    demac-wufoo-credentials:
+        source:
+            # acl_resource: demac_wufoo_credentials_view_acl
+            type: orm
+            query:
+                select:
+                    - w.id
+                    - w.apiKey
+                    - w.apiUser
+                    - w.formHash
+                    - w.formName
+                    - w.formLabel
+                    - w.domainName
+                    - w.active
+                    - w.updatedAt
+                from:
+                    - { table: DemacMediaCustomSalesBundle:WufooCredentials, alias: w }
+        columns:
+            apiKey:
+                label: 'Api Key'
+            apiUser:
+                label: 'Api User'
+            formHash:
+                label: 'Form Hash'
+            formName:
+                label: 'Form Name'
+            formLabel:
+                label: 'Form Label'
+            domainName:
+                label: 'Domain'
+                frontend_type: html
+            active:
+                label: 'Active'
+                frontend_type: boolean
+            updatedAt:
+                label: 'Updated At'
+                frontend_type: datetime
+        properties:
+            id: ~
+            update_link:
+                type: url
+                route: demac_wufoo_credentials_update
+                params:
+                    - id
+            view_link:
+                type: url
+                route: demac_wufoo_credentials_view
+                params:
+                    - id
+            delete_link:
+                type: url
+                route: demac_api_delete_wufoo_credentials
+                params:
+                    - id
+        sorters:
+            default:
+                updated: DESC
+        actions:
+            view:
+                type:          navigate
+                label:         View
+                link:          view_link
+                icon:          eye-open
+                acl_resource:  demac_wufoo_credentials_view_acl
+                rowAction:     true
+            update:
+                type:          navigate
+                label:         Update
+                link:          update_link
+                icon:          edit
+                acl_resource:  demac_wufoo_credentials_update_acl
+            delete:
+                type:          delete
+                label:         Delete
+                link:          delete_link
+                icon:          trash
+                acl_resource:  demac_wufoo_credentials_delete_acl

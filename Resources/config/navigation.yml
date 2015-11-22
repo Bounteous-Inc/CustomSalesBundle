@@ -1,0 +1,16 @@
+oro_menu_config:
+    items:
+        wufoo_tab_link:
+            label: 'Wufoo Credentials'
+            route: demac_wufoo_credentials
+    tree:
+        application_menu:
+            children:
+                system_tab:
+                    children:
+                        integrations_submenu:
+                            merge_strategy: append
+                            children:
+                                wufoo_tab_link: ~
+oro_titles:
+    demac_wufoo_credentials: ~

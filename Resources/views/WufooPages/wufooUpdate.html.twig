@@ -1,0 +1,70 @@
+{% extends 'OroUIBundle:actions:update.html.twig' %}
+{% form_theme form with 'OroFormBundle:Form:fields.html.twig' %}
+
+{% if form.vars.value.id %}
+    {% set formAction = path('demac_wufoo_credentials_update', { 'id': form.vars.value.id }) %}
+{% else %}
+    {% set formAction = path('demac_wufoo_credentials_create') %}
+{% endif %}
+
+{% block navButtons %}
+    {% if form.vars.value.id and resource_granted('DELETE', form.vars.value) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('demac_api_delete_wufoo_credentials', {'id': form.vars.value.id}),
+            'dataRedirect': path('demac_media_customsales_wufoo'),
+            'aCss': 'no-hash remove-button',
+            'id': 'btn-remove-tag',
+            'dataId': form.vars.value.id,
+            'entity_label': 'Wufoo Credentials'
+        }) }}
+        {{ UI.buttonSeparator() }}
+    {% endif %}
+    {{ UI.cancelButton(path('demac_media_customsales_wufoo')) }}
+    {% set html = UI.saveAndCloseButton() %}
+    {% if resource_granted('demac_wufoo_credentials_update') %}
+        {% set html = html ~ UI.saveAndStayButton() %}
+    {% endif %}
+    {{ UI.dropdownSaveButton({ 'html': html }) }}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% if form.vars.value.id %}
+        {% set breadcrumbs = {
+        'entity':      form.vars.value,
+        'indexPath':   path('demac_media_customsales_wufoo'),
+        'indexLabel': 'Wufoo Credentials',
+        'entityTitle': 'Wufoo Credentials'
+        } %}
+        {{ parent() }}
+    {% else %}
+        {% set title = 'oro.ui.create_entity'|trans({'%entityName%': 'Wufoo Credentials'}) %}
+        {% include 'OroUIBundle::page_title_block.html.twig' with { title: title } %}
+    {% endif %}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set id = 'vehicle-edit' %}
+
+    {% set dataBlocks = [{
+    'title': 'General'|trans,
+    'class': 'active',
+        'subblocks': [{
+            'title': '',
+                'data': [
+                    form_row(form.apiKey),
+                    form_row(form.apiUser),
+                    form_row(form.formHash),
+                    form_row(form.formName),
+                    form_row(form.formLabel),
+                    form_row(form.domainName),
+                    form_row(form.active),
+                ]
+            }]
+        }]
+    %}
+    {% set data = {
+    'formErrors': form_errors(form)? form_errors(form) : null,
+    'dataBlocks': dataBlocks,
+    } %}
+    {{ parent() }}
+{% endblock content_data %}

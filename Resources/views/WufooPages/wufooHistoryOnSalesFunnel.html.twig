@@ -1,0 +1,60 @@
+{% import 'OroDataGridBundle::macros.html.twig' as dataGrid %}
+
+<div class="responsive-section responsive-big responsive-section-no-blocks" style="clear:both;">
+    <div class="row-fluid">
+        <div class="form-horizontal">
+            <div class="responsive-cell responsive-cell-no-blocks">
+                <script type="text/javascript">
+                    require(['jquery'],
+                        function ($) {
+                            $(function () {
+                                $.get( "{{ path('demac_media_customsales_wufoo_get', { 'email': entity.lead.email|default('null') }) }}", function( data ) {
+                                    console.log(data);
+                                    $("#wufooResult").html("<h5>Data history from <strong>Wufoo.com</strong></h5> <hr />");
+                                    if (data.length < 1) {
+                                        $( "#wufooResult" ).append('No data in wufoo for the email: <strong>{{ entity.email|default('null') }}</strong>');
+                                    } else {
+                                        for (var x in data[0].Entries) {
+
+                                            $("#wufooResult").append('Created At: <strong>' + data[0].Entries[x].DateCreated + '</strong></br>');
+                                            $("#wufooResult").append('Name: <strong>' + data[0].Entries[x].Field1 + ' ' + data[0].Entries[x].Field2 + '</strong></br>');
+                                            $("#wufooResult").append('Address: ' + data[0].Entries[x].Field3 +
+                                                    ' ' + data[0].Entries[x].Field4 +
+                                                    ' ' + data[0].Entries[x].Field5 +
+                                                    ' ' + data[0].Entries[x].Field6 +
+                                                    ' ' + data[0].Entries[x].Field7 +
+                                                    ' ' + data[0].Entries[x].Field8 +
+                                                    '</br>');
+                                            $("#wufooResult").append('email: <strong>' + data[0].Entries[x].Field9 + '</strong></br>');
+                                            $("#wufooResult").append('Phone: <strong>' + data[0].Entries[x].Field10 + '</strong></br>');
+                                            $("#wufooResult").append('Attachment: ' + data[0].Entries[x].Field11 + '</br>');
+                                            $("#wufooResult").append('Field12: ' + data[0].Entries[x].Field12 + '</br>');
+                                            $("#wufooResult").append('Field13: ' + data[0].Entries[x].Field13 + '</br>');
+                                            $("#wufooResult").append('Reference: ' + data[0].Entries[x].Field15 + '</br>');
+                                            $("#wufooResult").append('Color: ' + data[0].Entries[x].Field17 + '</br>');
+
+                                            /*
+                                             for (var y in data[0].Entries[x] ) {
+                                             $( "#wufooResult" ).append(data[0].Entries[x][y] + ' ');
+                                             }
+                                             */
+                                            $("#wufooResult").append('<hr />');
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    );
+                </script>
+
+                <div id="wufooResult">
+                    <p>
+                        Loading data history from <strong>Wufoo.com</strong>
+                        <br />
+                        <img src="http://overture.dev/bundles/oroui/img/loader.gif" />
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+{% extends 'OroUIBundle:actions:view.html.twig' %}
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+
+{% block navButtons %}
+    {% if resource_granted('EDIT', wufooCredentials) %}
+        {{ UI.editButton({
+            'path' : path('demac_wufoo_credentials_update', { id: wufooCredentials.id }),
+            'entity_label': 'Wufoo Credential'
+        }) }}
+    {% endif %}
+
+    {% if resource_granted('DELETE', wufooCredentials) %}
+        {{ UI.deleteButton({
+            'dataUrl': path('demac_api_delete_wufoo_credentials', {'id': wufooCredentials.id}),
+            'dataRedirect': path('demac_media_customsales_wufoo'),
+            'aCss': 'no-hash remove-button',
+            'id': 'btn-remove-vehicle',
+            'dataId': wufooCredentials.id,
+            'entity_label': 'Wufoo Credential',
+        }) }}
+    {% endif %}
+{% endblock navButtons %}
+
+{% block pageHeader %}
+    {% set breadcrumbs = {
+    'entity':      wufooCredentials,
+    'indexPath':   path('demac_media_customsales_wufoo'),
+    'indexLabel': 'Wufoo Credential',
+    'entityTitle': wufooCredentials.formName
+    } %}
+    {{ parent() }}
+{% endblock pageHeader %}
+
+{% block content_data %}
+    {% set data %}
+        <div class="widget-content">
+            <div class="row-fluid form-horizontal">
+                <div class="responsive-block">
+                    {{ UI.renderProperty('Active', wufooCredentials.active) }}
+                    {{ UI.renderProperty('Api Key', wufooCredentials.apiKey) }}
+                    {{ UI.renderProperty('Api User', wufooCredentials.apiUser) }}
+                    {{ UI.renderProperty('Form Name', wufooCredentials.formName) }}
+                    {{ UI.renderProperty('Form Hash', wufooCredentials.formHash) }}
+                    {{ UI.renderProperty('Form Label', wufooCredentials.formLabel) }}
+                    {{ UI.renderProperty('Domain Name', wufooCredentials.domainName) }}
+                    {{ UI.renderProperty('Created at', wufooCredentials.createdAt|date) }}
+                    {{ UI.renderProperty('Updated at', wufooCredentials.updatedAt|date) }}
+                </div>
+            </div>
+        </div>
+    {% endset %}
+    {% set dataBlocks = [{
+        'title': 'Data',
+            'class': 'active',
+                'subblocks': [
+                    { 'data' : [data] }
+                ]
+        }]
+    %}
+
+    {% set id = 'vehicleView' %}
+    {% set data = { 'dataBlocks': dataBlocks } %}
+    {{ parent() }}
+{% endblock content_data %}
