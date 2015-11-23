@@ -16,7 +16,7 @@
                                     } else {
                                         console.log(data);
 
-                                        for (var x in data.q1jm6zl14gt8em[0].Entries) {
+                                        for (var x in data.sample_form_view[0].Entries) {
                                             $("#wufooResult").append('Created At: <strong>' + data[0].Entries[x].DateCreated + '</strong></br>');
                                             $("#wufooResult").append('Name: <strong>' + data[0].Entries[x].Field1 + ' ' + data[0].Entries[x].Field2 + '</strong></br>');
                                             $("#wufooResult").append('Address: ' + data[0].Entries[x].Field3 +
@@ -33,11 +33,6 @@
                                             $("#wufooResult").append('Field13: ' + data[0].Entries[x].Field13 + '</br>');
                                             $("#wufooResult").append('Reference: ' + data[0].Entries[x].Field15 + '</br>');
                                             $("#wufooResult").append('Color: ' + data[0].Entries[x].Field17 + '</br>');
-                                            /*
-                                             for (var y in data[0].Entries[x] ) {
-                                             $( "#wufooResult" ).append(data[0].Entries[x][y] + ' ');
-                                             }
-                                             */
                                             $("#wufooResult").append('<hr />');
                                         }
                                     }
@@ -51,7 +46,7 @@
                     <p>
                         Loading data history from <strong>Wufoo.com</strong>
                         <br />
-                        <img src="http://overture.dev/bundles/oroui/img/loader.gif" />
+                        <img src="/bundles/oroui/img/loader.gif" />
                     </p>
                 </div>
             </div>
