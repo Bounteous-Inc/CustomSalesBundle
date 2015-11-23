@@ -16,3 +16,9 @@ services:
             - @doctrine
         tags:
             - { name: oro_workflow.action, alias: request_entity_custom|find_entity_custom }
+
+    demacmedia.listener.response_listener:
+        class: DemacMedia\Bundle\CustomSalesBundle\EventListener\ResponseListener
+        arguments: [@request_stack]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: OnKernelResponse }
