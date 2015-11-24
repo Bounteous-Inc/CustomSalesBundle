@@ -143,7 +143,7 @@
                                                                     ' ' + data[form_name][0].Entries[x].Field8 +
                                                                     '</br>';
 
-                                                            sample_request_form += 'email: <strong>'
+                                                            sample_request_form += 'Email: <strong>'
                                                                     + data[form_name][0].Entries[x].Field9
                                                                     + '</strong></br>';
 
@@ -151,32 +151,31 @@
                                                                     + data[form_name][0].Entries[x].Field10
                                                                     + '</strong></br>';
 
-                                                            sample_request_form += text2Link(
-                                                                    data[form_name][0].Entries[x].Field11,
-                                                                    'link'
-                                                            );
+                                                            sample_request_form += 'Phone Extension: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field27
+                                                                    + '</strong></br>';
 
-                                                            sample_request_form += text2Link(
-                                                                    data[form_name][0].Entries[x].Field11,
-                                                                    'button'
-                                                            );
+                                                            if (data[form_name][0].Entries[x].Field11.length > 0) {
+                                                                sample_request_form += text2Link(
+                                                                        data[form_name][0].Entries[x].Field11,
+                                                                        'link'
+                                                                );
 
-                                                            sample_request_form += 'Field12: '
-                                                                    + data[form_name][0].Entries[x].Field12
-                                                                    + '</br>';
+                                                                sample_request_form += text2Link(
+                                                                        data[form_name][0].Entries[x].Field11,
+                                                                        'button'
+                                                                );
+                                                            }
 
-                                                            sample_request_form += 'Field13: '
+                                                            sample_request_form += 'How many do you eventually plan to order: '
+                                                                    + '<strong>' +
                                                                     + data[form_name][0].Entries[x].Field13
-                                                                    + '</br>';
+                                                                    + '</strong></br>';
 
-
-                                                            sample_request_form += 'Reference: '
-                                                                    + data[form_name][0].Entries[x].Field15
-                                                                    + '</br>';
-
-                                                            sample_request_form += 'Color: '
+                                                            sample_request_form += 'Preferred Color of Sample: '
+                                                                    + '<strong>' +
                                                                     + data[form_name][0].Entries[x].Field17
-                                                                    + '</br>';
+                                                                    + '</strong></br>';
 
                                                             sample_request_form += '<hr />';
 
@@ -204,43 +203,30 @@
                                                                         + data[form_name][0].Entries[x].Field6 +
                                                                     ' ' + data[form_name][0].Entries[x].Field7 +
                                                                     ' ' + data[form_name][0].Entries[x].Field8 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field9 +
                                                                     ' ' + data[form_name][0].Entries[x].Field10 +
                                                                     ' ' + data[form_name][0].Entries[x].Field11 +
                                                                     '</br>';
 
-                                                            catalog_request_form += 'email: <strong>'
-                                                                    + data[form_name][0].Entries[x].Field9
+                                                            catalog_request_form += 'Email: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field4
                                                                     + '</strong></br>';
 
                                                             catalog_request_form += 'Phone: <strong>'
-                                                                    + data[form_name][0].Entries[x].Field10
+                                                                    + data[form_name][0].Entries[x].Field3
                                                                     + '</strong></br>';
 
-                                                            catalog_request_form += text2Link(
-                                                                    data[form_name][0].Entries[x].Field11,
-                                                                    'link'
-                                                            );
-
-                                                            catalog_request_form += text2Link(
-                                                                    data[form_name][0].Entries[x].Field11,
-                                                                    'button'
-                                                            );
-
-                                                            catalog_request_form += 'Field12: '
-                                                                    + data[form_name][0].Entries[x].Field12
+                                                            catalog_request_form += 'Company Name: '
+                                                                    + data[form_name][0].Entries[x].Field5
                                                                     + '</br>';
 
-                                                            catalog_request_form += 'Field13: '
-                                                                    + data[form_name][0].Entries[x].Field13
+                                                            catalog_request_form += 'Additional Comments: '
+                                                                    + data[form_name][0].Entries[x].Field12
                                                                     + '</br>';
 
 
                                                             catalog_request_form += 'Reference: '
                                                                     + data[form_name][0].Entries[x].Field15
-                                                                    + '</br>';
-
-                                                            catalog_request_form += 'Color: '
-                                                                    + data[form_name][0].Entries[x].Field17
                                                                     + '</br>';
 
                                                             catalog_request_form += '<hr />';
