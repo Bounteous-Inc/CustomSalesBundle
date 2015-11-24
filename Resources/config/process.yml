@@ -5,8 +5,8 @@ definitions:
         entity:  OroCRM\Bundle\SalesBundle\Entity\Lead
         order:   10
         actions_configuration:
-            - @assign_value: [$.customWorkflowName, 'b2b_flow_sales_funnel_clone_560ab3ad43308'] # SaaS
-            # - @assign_value: [$.customWorkflowName, 'b2b_flow_sales_funnel_clone_5605aebc51cb3'] # Local
+            # - @assign_value: [$.customWorkflowName, 'b2b_flow_sales_funnel_clone_560ab3ad43308'] # SaaS
+            - @assign_value: [$.customWorkflowName, 'b2b_flow_sales_funnel_clone_5605aebc51cb3'] # Local
             # Try to find a older Lead with the email provided
             # This is necessary to verify if this lead was here before
             - @find_entity:

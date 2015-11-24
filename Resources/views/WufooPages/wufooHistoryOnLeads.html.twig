@@ -9,32 +9,263 @@
                         function ($) {
                             $(function () {
                                 $.get( "{{ path('demac_media_customsales_wufoo_get', { 'email': entity.email|default('null') }) }}", function( data ) {
-                                    // console.log(data);
-                                    $("#wufooResult").html("<h5>Data history from <strong>Wufoo.com</strong></h5> <hr />");
+                                    $("#wufooResult").html(
+                                            "<h5>Data history from <strong>Wufoo.com</strong></h5> <hr />"
+                                    );
                                     if (data.length < 1) {
-                                        $( "#wufooResult" ).append('No data in wufoo for the email: <strong>{{ entity.email|default('null') }}</strong>');
+                                        $( "#wufooResult").append(
+                                                'No data in wufoo for the email: <strong>{{ entity.email|default('null') }}</strong>'
+                                        );
                                     } else {
-                                        console.log(data);
+                                        /* *************************************************************** */
+                                        $("#wufooResult").html('');
 
-                                        for (var x in data.sample_form_view[0].Entries) {
-                                            $("#wufooResult").append('Created At: <strong>' + data[0].Entries[x].DateCreated + '</strong></br>');
-                                            $("#wufooResult").append('Name: <strong>' + data[0].Entries[x].Field1 + ' ' + data[0].Entries[x].Field2 + '</strong></br>');
-                                            $("#wufooResult").append('Address: ' + data[0].Entries[x].Field3 +
-                                                    ' ' + data[0].Entries[x].Field4 +
-                                                    ' ' + data[0].Entries[x].Field5 +
-                                                    ' ' + data[0].Entries[x].Field6 +
-                                                    ' ' + data[0].Entries[x].Field7 +
-                                                    ' ' + data[0].Entries[x].Field8 +
-                                                    '</br>');
-                                            $("#wufooResult").append('email: <strong>' + data[0].Entries[x].Field9 + '</strong></br>');
-                                            $("#wufooResult").append('Phone: <strong>' + data[0].Entries[x].Field10 + '</strong></br>');
-                                            $("#wufooResult").append('Attachment: ' + data[0].Entries[x].Field11 + '</br>');
-                                            $("#wufooResult").append('Field12: ' + data[0].Entries[x].Field12 + '</br>');
-                                            $("#wufooResult").append('Field13: ' + data[0].Entries[x].Field13 + '</br>');
-                                            $("#wufooResult").append('Reference: ' + data[0].Entries[x].Field15 + '</br>');
-                                            $("#wufooResult").append('Color: ' + data[0].Entries[x].Field17 + '</br>');
-                                            $("#wufooResult").append('<hr />');
+                                        /*
+                                        text is the url
+                                        type is the type of the return. 'button' or 'link'
+                                        */
+                                        var text2Link = function(text, type) {
+                                            if (text.length < 1){
+                                                return false;
+                                            }
+                                            var re = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?)/ig;
+                                            var str = text;
+                                            var m;
+                                            var returnValue = '';
+
+                                            if ((m = re.exec(str)) !== null) {
+                                                if (m.index === re.lastIndex) {
+                                                    re.lastIndex++;
+                                                }
+                                                if (m[0].length > 0) {
+                                                    if (type == 'button') {
+                                                        returnValue +=
+                                                                "<p><strong>Attached File: </strong> <a href='"
+                                                                + m[0] +
+                                                                "' class='btn icons-holder-text no-hash' target='_blank'>Download</a></p>"
+                                                        ;
+                                                    } else {
+                                                        returnValue +=
+                                                                "<p><strong>Attached File: </strong> <a href='"
+                                                                + m[0] +
+                                                                "' target='_blank'>" + m[0] + "</a></p>"
+                                                        ;
+                                                    }
+                                                }
+                                            }
+                                            return returnValue;
                                         }
+
+                                        var showWufooData = function(form_name) {
+                                            if (form_name in data) {
+
+                                                console.log(data);
+
+                                                for (var x in data[form_name][0].Entries) {
+                                                    switch(form_name) {
+                                                        case 'virtual_preview_form':
+                                                            var virtual_preview_form = '';
+                                                            virtual_preview_form += 'Form Name: <strong>'
+                                                                    + form_name
+                                                                    + '</strong></br>';
+
+                                                            virtual_preview_form += 'Created At: <strong>'
+                                                                    + data[form_name][0].Entries[x].DateCreated
+                                                                    + '</strong></br>';
+
+                                                            virtual_preview_form += 'Company Name: '
+                                                                    + data[form_name][0].Entries[x].Field9
+                                                                    + '</br>';
+
+                                                            virtual_preview_form += 'Name: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field3 + ' '
+                                                                    + data[form_name][0].Entries[x].Field4
+                                                                    + '</strong></br>';
+
+
+                                                            virtual_preview_form += 'email: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field2
+                                                                    + '</strong></br>';
+
+                                                            virtual_preview_form += 'Phone: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field6
+                                                                    + '</strong></br>';
+
+                                                            virtual_preview_form += '<p><strong>Attachment URL: </strong>'
+                                                                    + data[form_name][0].Entries[x].Field32
+                                                                    + '</p>';
+
+                                                            virtual_preview_form += text2Link(
+                                                                    data[form_name][0].Entries[x].Field32,
+                                                                    'button'
+                                                            );
+
+                                                            virtual_preview_form += 'Delivery Date: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field8
+                                                                    + '</strong></br>';
+
+                                                            virtual_preview_form += 'Quantity needed for event: '
+                                                                    + data[form_name][0].Entries[x].Field17
+                                                                    + '</br>';
+
+                                                            virtual_preview_form += 'Reference: '
+                                                                    + data[form_name][0].Entries[x].Field11
+                                                                    + '</br>';
+
+                                                            virtual_preview_form += '<hr />';
+
+                                                            $("#wufooResult_" + form_name).append(
+                                                                    virtual_preview_form
+                                                            );
+                                                        break;
+
+                                                        case 'sample_request_form':
+                                                            var sample_request_form = '';
+                                                            sample_request_form += 'Form Name: <strong>'
+                                                                    + form_name
+                                                                    + '</strong></br>';
+
+                                                            sample_request_form += 'Created At: <strong>'
+                                                                    + data[form_name][0].Entries[x].DateCreated
+                                                                    + '</strong></br>';
+
+                                                            sample_request_form += 'Name: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field1 + ' '
+                                                                    + data[form_name][0].Entries[x].Field2
+                                                                    + '</strong></br>';
+
+                                                            sample_request_form += 'Address: '
+                                                                    + data[form_name][0].Entries[x].Field3 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field4 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field5 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field6 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field7 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field8 +
+                                                                    '</br>';
+
+                                                            sample_request_form += 'email: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field9
+                                                                    + '</strong></br>';
+
+                                                            sample_request_form += 'Phone: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field10
+                                                                    + '</strong></br>';
+
+                                                            sample_request_form += text2Link(
+                                                                    data[form_name][0].Entries[x].Field11,
+                                                                    'link'
+                                                            );
+
+                                                            sample_request_form += text2Link(
+                                                                    data[form_name][0].Entries[x].Field11,
+                                                                    'button'
+                                                            );
+
+                                                            sample_request_form += 'Field12: '
+                                                                    + data[form_name][0].Entries[x].Field12
+                                                                    + '</br>';
+
+                                                            sample_request_form += 'Field13: '
+                                                                    + data[form_name][0].Entries[x].Field13
+                                                                    + '</br>';
+
+
+                                                            sample_request_form += 'Reference: '
+                                                                    + data[form_name][0].Entries[x].Field15
+                                                                    + '</br>';
+
+                                                            sample_request_form += 'Color: '
+                                                                    + data[form_name][0].Entries[x].Field17
+                                                                    + '</br>';
+
+                                                            sample_request_form += '<hr />';
+
+                                                            $("#wufooResult_" + form_name).append(
+                                                                    sample_request_form
+                                                            );
+                                                        break;
+
+                                                        case 'catalog_request_form':
+                                                            var catalog_request_form = '';
+                                                            catalog_request_form += 'Form Name: <strong>'
+                                                                    + form_name
+                                                                    + '</strong></br>';
+
+                                                            catalog_request_form += 'Created At: <strong>'
+                                                                    + data[form_name][0].Entries[x].DateCreated
+                                                                    + '</strong></br>';
+
+                                                            catalog_request_form += 'Name: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field1 + ' '
+                                                                    + data[form_name][0].Entries[x].Field2
+                                                                    + '</strong></br>';
+
+                                                            catalog_request_form += 'Address: '
+                                                                        + data[form_name][0].Entries[x].Field6 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field7 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field8 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field10 +
+                                                                    ' ' + data[form_name][0].Entries[x].Field11 +
+                                                                    '</br>';
+
+                                                            catalog_request_form += 'email: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field9
+                                                                    + '</strong></br>';
+
+                                                            catalog_request_form += 'Phone: <strong>'
+                                                                    + data[form_name][0].Entries[x].Field10
+                                                                    + '</strong></br>';
+
+                                                            catalog_request_form += text2Link(
+                                                                    data[form_name][0].Entries[x].Field11,
+                                                                    'link'
+                                                            );
+
+                                                            catalog_request_form += text2Link(
+                                                                    data[form_name][0].Entries[x].Field11,
+                                                                    'button'
+                                                            );
+
+                                                            catalog_request_form += 'Field12: '
+                                                                    + data[form_name][0].Entries[x].Field12
+                                                                    + '</br>';
+
+                                                            catalog_request_form += 'Field13: '
+                                                                    + data[form_name][0].Entries[x].Field13
+                                                                    + '</br>';
+
+
+                                                            catalog_request_form += 'Reference: '
+                                                                    + data[form_name][0].Entries[x].Field15
+                                                                    + '</br>';
+
+                                                            catalog_request_form += 'Color: '
+                                                                    + data[form_name][0].Entries[x].Field17
+                                                                    + '</br>';
+
+                                                            catalog_request_form += '<hr />';
+
+                                                            $("#wufooResult_" + form_name).append(
+                                                                    catalog_request_form
+                                                            );
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        };
+
+                                        var formNamesArray = [
+                                            'virtual_preview_form',
+                                            'sample_request_form',
+                                            'catalog_request_form'
+                                        ];
+
+                                        for (var formNameKey in formNamesArray) {
+                                            showWufooData(formNamesArray[formNameKey]);
+                                        }
+
+                                        /* *************************************************************** */
+
                                     }
                                 });
                             });
@@ -49,6 +280,10 @@
                         <img src="/bundles/oroui/img/loader.gif" />
                     </p>
                 </div>
+
+                <div id="wufooResult_virtual_preview_form"></div>
+                <div id="wufooResult_sample_request_form"></div>
+                <div id="wufooResult_catalog_request_form"></div>
             </div>
         </div>
     </div>

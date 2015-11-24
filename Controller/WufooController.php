@@ -154,13 +154,19 @@ class WufooController extends Controller
             return false;
         }
 
-        $filter = [
-            'Filter1' => urldecode('Field9+Is_equal_to+' .$email),
-            'sort' => 'EntryId',
-            'sortDirection' => 'DESC',
-        ];
-
         for ($x = 0; $x < sizeof($wufooConfig); $x++) {
+
+            $emailField = [
+                'virtual_preview_form' => 'Field2',
+                'sample_request_form'  => 'Field9',
+                'catalog_request_form' => 'Field4'
+            ];
+
+            $filter = [
+                'Filter1' => urldecode($emailField[$wufooConfig[$x]->getFormName()]. '+Is_equal_to+' .$email),
+                'sort' => 'EntryId',
+                'sortDirection' => 'DESC',
+            ];
 
             $wufoo = $this->setWufooAuth($wufooConfig);
             if (!$wufoo) {
@@ -177,14 +183,21 @@ class WufooController extends Controller
             );
 
             if ($result['EntryCount'] > 0) {
-                $data[$wufooConfig[$x]->getFormName()][] = $wufoo->getJSON(
+
+                $formName = $wufooConfig[$x]->getFormName();
+
+                $data[$formName][] = $wufoo->getJSON(
                     '/api/v3/forms/' .$formHash. '/entries.json',
                     [],
                     [],
                     ['query' => $filter]
                 );
             }
+
+
+
             unset($wufoo);
+
         }
         // $return = $data;
         return new JsonResponse($data);
