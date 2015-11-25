@@ -5,22 +5,102 @@ definitions:
         entity:  OroCRM\Bundle\SalesBundle\Entity\Lead
         order:   10
         actions_configuration:
-            - @create_entity:
-                class:     OroCRM\Bundle\SalesBundle\Entity\SalesFunnel
-                attribute: $.salesFunnel
-                data:
-                    startDate:    $createdAt
-                    owner:        $owner
-                    lead:         $.data
-                    organization: $organization
-                    dataChannel:  $dataChannel
-                flush: true
-            - @start_workflow:
-                name: b2b_flow_sales_funnel_clone_560ab3ad43308
-                entity: $.salesFunnel
-                attribute: $.workflowItem
-                transition: start_from_lead
-
+            - @assign_value: [$.customWorkflowName, 'b2b_flow_sales_funnel_clone_560ab3ad43308'] # SaaS
+            # - @assign_value: [$.customWorkflowName, 'b2b_flow_sales_funnel_clone_5605aebc51cb3'] # Local
+            # Try to find a older Lead with the email provided
+            # This is necessary to verify if this lead was here before
+            - @find_entity:
+                parameters:
+                    class: OroCRM\Bundle\SalesBundle\Entity\Lead
+                    attribute: $.findLeadByEmail
+                    where:
+                        email: $.data.email
+                    order_by:
+                        id: desc
+            - @tree:
+                conditions:
+                    @empty: $.findLeadByEmail
+                actions:
+                    - @create_entity:
+                        class:     OroCRM\Bundle\SalesBundle\Entity\SalesFunnel
+                        attribute: $.salesFunnel
+                        data:
+                            startDate:    $createdAt
+                            owner:        $owner
+                            lead:         $.data
+                            organization: $organization
+                            dataChannel:  $dataChannel
+                        flush: true
+                    - @start_workflow:
+                        name: $.customWorkflowName
+                        entity: $.salesFunnel
+                        attribute: $.workflowItem
+                        transition: start_from_lead
+            - @tree:
+                conditions:
+                    @not_empty: $.findLeadByEmail
+                actions:
+                    # Actions if found a Lead with that email provided
+                    - @find_entity_custom:
+                        parameters:
+                            class: OroCRM\Bundle\SalesBundle\Entity\Lead
+                            attribute: $.olderThen24Hours
+                            where:
+                                createdAt: 'NOW() - INTERVAL 24 HOUR' # find_entity_custom does the trick
+                                email: $.data.email
+                            order_by:
+                                id: desc
+                    - @create_datetime:
+                        attribute: $.sales_funnel_start_datetime
+                    - @tree:
+                        conditions:
+                            @empty: $.olderThen24Hours
+                        actions:
+                            # Maybe this Lead was created 5 days ago? 2 month ago?
+                            # So, let's create a new sales process! It's a new request!
+                            - @create_entity:
+                                class:     OroCRM\Bundle\SalesBundle\Entity\SalesFunnel
+                                attribute: $.salesFunnel
+                                data:
+                                    startDate:    $createdAt
+                                    owner:        $owner
+                                    lead:         $.data
+                                    organization: $organization
+                                    dataChannel:  $dataChannel
+                                flush: true
+                            - @start_workflow:
+                                name: $.customWorkflowName
+                                entity: $.salesFunnel
+                                attribute: $.workflowItem
+                                transition: start_from_lead
+                    # Try to find if the existent Lead was create before 24 hours ago
+                    - @tree:
+                        conditions:
+                            @not_empty: $.olderThen24Hours # The Lead is recent! Let's remove it!
+                        actions:
+                            - @find_entity:
+                                parameters:
+                                    class: OroCRM\Bundle\SalesBundle\Entity\SalesFunnel
+                                    attribute: $.salesFunnelToUpdateRecent
+                                    where:
+                                        lead: $.olderThen24Hours.id
+                                    order_by:
+                                        id: desc
+                            - @tree:
+                                conditions:
+                                    @not_empty: $.salesFunnelToUpdateRecent
+                                actions:
+                                    # If the lead was create some minutes or hours ago, we don't need to create
+                                    # a new SalesProcess We just need to update the date on SalesProcess
+                                    - @call_method: # only change the field 'updatedAt'
+                                        parameters:
+                                            object: $.salesFunnelToUpdateRecent # this is the current entity! Lead!
+                                            method: setUpdatedAt
+                                            method_parameters: [$.sales_funnel_start_datetime]
+                                    # Since we're going to use the latest Lead, let's
+                                    # remove this one to "merge" the recent ones.
+                                    - @remove_entity:
+                                        target: $.data
 triggers:
     lead_creation:
         -

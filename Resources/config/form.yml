@@ -1,0 +1,5 @@
+services:
+    demacmedia.form.type.wufoocredentials:
+        class: DemacMedia\Bundle\CustomSalesBundle\Form\Type\WufooCredentialsType
+        tags:
+            - { name: form.type, alias: wufoo_credentials }

@@ -1,0 +1,14 @@
+placeholders:
+    view_content_data_additional_information:
+        items:
+            demacmedia_wufoo_history_salesfunnel: ~
+            demacmedia_wufoo_history_lead: ~
+
+
+items:
+    demacmedia_wufoo_history_salesfunnel:
+        template: DemacMediaCustomSalesBundle:WufooPages:wufooHistoryOnSalesFunnel.html.twig
+        applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %orocrm_sales.salesfunnel.entity.class%)
+    demacmedia_wufoo_history_lead:
+        template: DemacMediaCustomSalesBundle:WufooPages:wufooHistoryOnLeads.html.twig
+        applicable: @oro_ui.placeholder.filter->isInstanceOf($entity$, %orocrm_sales.lead.entity.class%)

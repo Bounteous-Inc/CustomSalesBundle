@@ -1,0 +1,24 @@
+parameters:
+    demacmedia.oro_workflow.action.request_entity_custom.class: DemacMedia\Bundle\CustomSalesBundle\Model\Action\RequestEntityCustom
+
+services:
+    demacmedia.wufoo.credentials_manager.api:
+        class: Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
+        parent: oro_soap.manager.entity_manager.abstract
+        arguments:
+            - DemacMedia\Bundle\CustomSalesBundle\Entity\WufooCredentials
+            - "@doctrine.orm.entity_manager"
+
+    demacmedia.oro_workflow.action.request_entity_custom:
+        class: %demacmedia.oro_workflow.action.request_entity_custom.class%
+        arguments:
+            - @oro_workflow.context_accessor
+            - @doctrine
+        tags:
+            - { name: oro_workflow.action, alias: request_entity_custom|find_entity_custom }
+
+    demacmedia.listener.response_listener:
+        class: DemacMedia\Bundle\CustomSalesBundle\EventListener\ResponseListener
+        arguments: [@request_stack]
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: OnKernelResponse }
